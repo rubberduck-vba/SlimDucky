@@ -48,20 +48,20 @@ namespace SlimDucky
         static extern int GetClientRect(IntPtr hWnd, ref Rect lpRect);
 
         private IntPtr _parentHandle;
-        private ParentWindow _subClassingWindow;
-        private GCHandle _thisHandle;
+        //private ParentWindow _subClassingWindow;
+        //private GCHandle _thisHandle;
 
         internal void AddUserControl(UserControl control, IntPtr vbeHwnd)
         {
             _parentHandle = GetParent(Handle);
-            _subClassingWindow = new ParentWindow(vbeHwnd, new IntPtr(GetHashCode()), _parentHandle);
-            _subClassingWindow.CallBackEvent += OnCallBackEvent;
+            //_subClassingWindow = new ParentWindow(vbeHwnd, new IntPtr(GetHashCode()), _parentHandle);
+            //_subClassingWindow.CallBackEvent += OnCallBackEvent;
 
-            //DO NOT REMOVE THIS CALL. Dockable windows are instantiated by the VBE, not directly by RD.  On top of that,
-            //since we have to inherit from UserControl we don't have to keep handling window messages until the VBE gets
-            //around to destroying the control's host or it results in an access violation when the base class is disposed.
-            //We need to manually call base.Dispose() ONLY in response to a WM_DESTROY message.
-            _thisHandle = GCHandle.Alloc(this, GCHandleType.Normal);
+            ////DO NOT REMOVE THIS CALL. Dockable windows are instantiated by the VBE, not directly by RD.  On top of that,
+            ////since we have to inherit from UserControl we don't have to keep handling window messages until the VBE gets
+            ////around to destroying the control's host or it results in an access violation when the base class is disposed.
+            ////We need to manually call base.Dispose() ONLY in response to a WM_DESTROY message.
+            //_thisHandle = GCHandle.Alloc(this, GCHandleType.Normal);
 
             if(control != null)
             {
@@ -71,19 +71,19 @@ namespace SlimDucky
             AdjustSize();
         }
 
-        private void OnCallBackEvent(object sender, SubClassingWindowEventArgs e)
-        {
-            if(!e.Closing)
-            {
-                var param = new LParam { Value = (uint)e.LParam };
-                Size = new Size(param.LowWord, param.HighWord);
-            }
-            else
-            {
-                Debug.WriteLine("DockableWindowHost removed event handler.");
-                _subClassingWindow.CallBackEvent -= OnCallBackEvent;
-            }
-        }
+        //private void OnCallBackEvent(object sender, SubClassingWindowEventArgs e)
+        //{
+        //    if(!e.Closing)
+        //    {
+        //        var param = new LParam { Value = (uint)e.LParam };
+        //        Size = new Size(param.LowWord, param.HighWord);
+        //    }
+        //    else
+        //    {
+        //        Debug.WriteLine("DockableWindowHost removed event handler.");
+        //        _subClassingWindow.CallBackEvent -= OnCallBackEvent;
+        //    }
+        //}
 
         private void AdjustSize()
         {
@@ -94,72 +94,72 @@ namespace SlimDucky
             }
         }
 
-        protected override bool ProcessKeyPreview(ref Message m)
-        {
-            const int wmKeydown = 0x100;
-            var result = false;
+        //protected override bool ProcessKeyPreview(ref Message m)
+        //{
+        //    const int wmKeydown = 0x100;
+        //    var result = false;
 
-            var hostedUserControl = (UserControl)Controls[0];
+        //    var hostedUserControl = (UserControl)Controls[0];
 
-            if(m.Msg == wmKeydown)
-            {
-                var pressedKey = (Keys)m.WParam;
-                switch(pressedKey)
-                {
-                    case Keys.Tab:
-                        switch(ModifierKeys)
-                        {
-                            case Keys.None:
-                                SelectNextControl(hostedUserControl.ActiveControl, true, true, true, true);
-                                result = true;
-                                break;
-                            case Keys.Shift:
-                                SelectNextControl(hostedUserControl.ActiveControl, false, true, true, true);
-                                result = true;
-                                break;
-                        }
-                        break;
-                    case Keys.Return:
-                        if(hostedUserControl.ActiveControl.GetType() == typeof(Button))
-                        {
-                            var activeButton = (Button)hostedUserControl.ActiveControl;
-                            activeButton.PerformClick();
-                        }
-                        break;
-                }
-            }
+        //    if(m.Msg == wmKeydown)
+        //    {
+        //        var pressedKey = (Keys)m.WParam;
+        //        switch(pressedKey)
+        //        {
+        //            case Keys.Tab:
+        //                switch(ModifierKeys)
+        //                {
+        //                    case Keys.None:
+        //                        SelectNextControl(hostedUserControl.ActiveControl, true, true, true, true);
+        //                        result = true;
+        //                        break;
+        //                    case Keys.Shift:
+        //                        SelectNextControl(hostedUserControl.ActiveControl, false, true, true, true);
+        //                        result = true;
+        //                        break;
+        //                }
+        //                break;
+        //            case Keys.Return:
+        //                if(hostedUserControl.ActiveControl.GetType() == typeof(Button))
+        //                {
+        //                    var activeButton = (Button)hostedUserControl.ActiveControl;
+        //                    activeButton.PerformClick();
+        //                }
+        //                break;
+        //        }
+        //    }
 
-            if(!result)
-            {
-                result = base.ProcessKeyPreview(ref m);
-            }
-            return result;
-        }
+        //    if(!result)
+        //    {
+        //        result = base.ProcessKeyPreview(ref m);
+        //    }
+        //    return result;
+        //}
 
-        protected override void DefWndProc(ref Message m)
-        {
-            //See the comment in the ctor for why we have to listen for this.
-            if(m.Msg == (int)WM.DESTROY)
-            {
-                Debug.WriteLine("DockableWindowHost received WM.DESTROY.");
-                _thisHandle.Free();
-            }
-            base.DefWndProc(ref m);
-        }
+        //protected override void DefWndProc(ref Message m)
+        //{
+        //    //See the comment in the ctor for why we have to listen for this.
+        //    if(m.Msg == (int)WM.DESTROY)
+        //    {
+        //        Debug.WriteLine("DockableWindowHost received WM.DESTROY.");
+        //        _thisHandle.Free();
+        //    }
+        //    base.DefWndProc(ref m);
+        //}
 
         //override 
 
-        public void Release()
-        {
-            Debug.WriteLine("DockableWindowHost release called.");
-            _subClassingWindow.Dispose();
-        }
+        //public void Release()
+        //{
+        //    Debug.WriteLine("DockableWindowHost release called.");
+        //    _subClassingWindow.Dispose();
+        //}
 
-        protected override void DestroyHandle()
-        {
-            Debug.WriteLine("DockableWindowHost DestroyHandle called.");
-            base.DestroyHandle();
-        }
+        //protected override void DestroyHandle()
+        //{
+        //    Debug.WriteLine("DockableWindowHost DestroyHandle called.");
+        //    base.DestroyHandle();
+        //}
 
         [ComVisible(false)]
         public class ParentWindow : SubclassingWindow
