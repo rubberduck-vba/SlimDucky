@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.wpfElementHost = new System.Windows.Forms.Integration.ElementHost();
+            this.wpfControl1 = new SlimDucky.WpfControl();
             this.SuspendLayout();
             // 
             // wpfElementHost
@@ -38,7 +39,7 @@
             this.wpfElementHost.Name = "wpfElementHost";
             this.wpfElementHost.Size = new System.Drawing.Size(150, 150);
             this.wpfElementHost.TabIndex = 0;
-            this.wpfElementHost.Child = null;
+            this.wpfElementHost.Child = this.wpfControl1;
             // 
             // WpfHostControl
             // 
@@ -53,5 +54,6 @@
         #endregion
 
         private System.Windows.Forms.Integration.ElementHost wpfElementHost;
+        private WpfControl wpfControl1;
     }
 }
