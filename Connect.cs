@@ -85,7 +85,7 @@ namespace SlimDucky
                 return;
             }
 
-            _app = new App(_vbe);
+            _app = new App(_vbe, _addIn);
             _app.Startup();
 
             _isInitialized = true;
