@@ -35,6 +35,8 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Common Files\Microsoft Shared\MSEnv\PublicAssemblies\extensibility.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -45,6 +47,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.cs" />
@@ -57,7 +60,16 @@
     <Compile Include="SubClassingWindowEventArgs.cs" />
     <Compile Include="User32.cs" />
     <Compile Include="WindowLongFlags.cs" />
+    <Compile Include="WinFormsControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinFormsControl.Designer.cs">
+      <DependentUpon>WinFormsControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="WM.cs" />
+    <Compile Include="WpfControl.xaml.cs">
+      <DependentUpon>WpfControl.xaml</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="Microsoft.Office.Core">
@@ -78,6 +90,17 @@
       <Isolated>False</Isolated>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="WinFormsControl.resx">
+      <DependentUpon>WinFormsControl.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="WpfControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
